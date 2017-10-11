@@ -5,7 +5,7 @@ function out=matchCoeffMatrices(C1,C2,weights)
 % Reasonable to use the latent (sorted eigenvalues) variable from the PCA
 % run used to calculate C2. 
 
-visBool=0;              % make a plot of the monte carlo performance history?
+visBool=1;              % make a plot of the monte carlo performance history?
 shuffleTries=100000;    % how long to run the monte carlo
 maxPCs=10;              % ignore PCs beyond this cutoff
 swapCount=4;            % how many pairs of columns to swap at a time
@@ -23,6 +23,8 @@ rho=corr(C1Partial,C2Partial);
 bestMatchScore=sum(rho(boolean(eye(maxPCs))).*weights);
 bestCoeffMatrix=C2;
 bestPermVector=1:numPCs;
+
+if visBool==1; h=waitbar(0,'progress'); end
 
 for i=1:shuffleTries
     
@@ -60,10 +62,13 @@ for i=1:shuffleTries
     
     perfHist(i)=bestMatchScore;
     
+    if visBool==1 && mod(i,1000)==0; waitbar(i/shuffleTries,h); end
+    
 end
 
 % make a plot
 if visBool==1
+    close(h);
     figure;
     plot(perfHist);
 end

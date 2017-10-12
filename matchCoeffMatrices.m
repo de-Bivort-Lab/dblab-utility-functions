@@ -1,4 +1,4 @@
-function out=matchCoeffMatrices(C1,C2,weights)
+function out=matchCoeffMatrices(C1,C2,weights,params)
 % attempts to match a loading (coeff) matrix C2 to a target loading matrix
 % C1. The match is evaluated by the weighted sum of column-wise correlation
 % coeffcients between the two matrixes. weights provides the weights.
@@ -7,8 +7,13 @@ function out=matchCoeffMatrices(C1,C2,weights)
 
 visBool=1;              % make a plot of the monte carlo performance history?
 shuffleTries=100000;    % how long to run the monte carlo
-maxPCs=10;              % ignore PCs beyond this cutoff
+maxPCs=25;              % ignore PCs beyond this cutoff
 swapCount=4;            % how many pairs of columns to swap at a time
+
+if isfield(params,'visBool'); visBool=params.visBool; end
+if isfield(params,'shuffleTries'); visBool=params.shuffleTries; end
+if isfield(params,'maxPCs'); visBool=params.maxPCs; end
+if isfield(params,'swapCount'); visBool=params.swapCount; end
 
 numPCs=min([size(C1,2) size(C2,2)]);
 numDims=size(C1,1);
@@ -19,6 +24,7 @@ C2Partial=C2(:,1:maxPCs);
 
 %initialize montecarlo dummy variables
 weights=weights/sum(weights);
+weights=weights(1:maxPCs);
 rho=corr(C1Partial,C2Partial);
 bestMatchScore=sum(rho(boolean(eye(maxPCs))).*weights);
 bestCoeffMatrix=C2;

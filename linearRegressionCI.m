@@ -41,7 +41,7 @@ if figureBool==1
     figure;
     hold on;
     
-    areabar(xVals,polyval(out.pOverall,xVals),2*std(out.fits),lineColor,ciColor);
+    areaBar(xVals,polyval(out.pOverall,xVals),2*std(out.fits),lineColor,ciColor);
     scatter(X,Y,320,'k.');
 end
 
